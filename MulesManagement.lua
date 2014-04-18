@@ -121,7 +121,6 @@ local function moveItemsMM(paramFromBag, paramDestinationBag)
                         --place as mush as we can then fill another spot
                         placeItemsMM(fromBag, slotFrom, destinationBag, destItem.slot, maxDestQuantity)
                         nbItemsMove = nbItemsMove + 1
-                        d("itemName : " .. itemName)
                         slotTmp = table.remove(slotAvalaibleDest,1)
                         if DoesBagHaveSpaceFor(destinationBag, fromBag, slotFrom) and slotTmp ~= nil then
                             placeItemsMM(fromBag, slotFrom, destinationBag, slotTmp, itemStack-maxDestQuantity)
@@ -131,12 +130,6 @@ local function moveItemsMM(paramFromBag, paramDestinationBag)
                 else
                     slotTmp = table.remove(slotAvalaibleDest,1)
                     if DoesBagHaveSpaceFor(destinationBag, fromBag, slotFrom) and slotTmp ~= nil then
-                        d("itemName : " .. itemName)
-                        d("fromBag : " .. fromBag )
-                        d("slotFrom : " .. slotFrom )
-                        d("destinationBag : " .. destinationBag )
-                        d("slotTmp : " .. slotTmp )
-                        d("itemStack : " .. itemStack )
                         placeItemsMM(fromBag, slotFrom, destinationBag, slotTmp, itemStack)
                         nbItemsMove = nbItemsMove + 1
                     end
