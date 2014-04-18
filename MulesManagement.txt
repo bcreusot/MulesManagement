@@ -1,0 +1,12 @@
+## Title: Mules Management - By |c3366FF@Todo|r
+## APIVersion: 100003
+## Description: Auto Management of your mules 
+## OptionalDependsOn: LibAddonMenu-1.0
+## SavedVariables: MulesManagementVars
+
+Libs/LibStub/LibStub.lua
+Libs/LibAddonMenu-1.0/LibAddonMenu-1.0.lua
+
+
+Langage.lua
+MulesManagement.lua
