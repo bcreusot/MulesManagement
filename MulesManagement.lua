@@ -73,48 +73,39 @@ local function getTranslated(text)
 end
 
 local function isMoveable(craftingType, itemType)
-    craftingTypeName = ""
-    itemTypeName = ""
+    local craftingTypeName = ""
+    local itemTypeName = ""
     if CRAFTING_TYPE_TRANSLATION_MM[craftingType] then
         craftingTypeName = CRAFTING_TYPE_TRANSLATION_MM[craftingType]
     end    
     if ITEMTYPE_TRANSLATION_MM[itemType] then
-        d(itemType)
         itemTypeName = ITEMTYPE_TRANSLATION_MM[itemType]
     end
 
     --If the All filter is selectec
     if MulesManagement.Saved.all then
-        d("all")
         return true
     end
     --CRAFT and RAW Material Test
     if (craftingType ~= CRAFTING_TYPE_INVALID and MulesManagement.Saved[craftingTypeName]) then 
         --if it's a raw material
         if not (itemType == ITEMTYPE_ALCHEMY_BASE or itemType == ITEMTYPE_BLACKSMITHING_RAW_MATERIAL or itemType == ITEMTYPE_CLOTHIER_RAW_MATERIAL or itemType == ITEMTYPE_WOODWORKING_RAW_MATERIAL) then
-            d("wanted but not raw")
             return true
         elseif MulesManagement.Saved["CRAFTING_TYPE_RAW"] then
-            d("wanted and raw")
             return true
         else
-            d("not wanted and raw")
             return false
         end
     end
     --OTHERS
     if (itemType ~= ITEMTYPE_NONE and MulesManagement.Saved[itemTypeName]) then
-        d("itemtype : " ..itemTypeName)
-        if craftingTypeName ~= nil then
-            d("craft :" .. craftingTypeName)
-        end
         return true
     end
     return false
 end
 
 local function displayChat(itemName, quantity, moved)
-    startString,endString = string.find(itemName,"%^")
+    local startString,endString = string.find(itemName,"%^")
     itemName = string.sub(itemName,0,startString-1)
     if MulesManagement.Saved["spamChat"] then
         if moved then
@@ -126,32 +117,36 @@ local function displayChat(itemName, quantity, moved)
 end
 
 local function moveItemsMM(paramFromBag, paramDestinationBag)
-    nbItemsMove = 0
-    nbItemsStack = 0
+    local nbItemsMove = 0
+    local nbItemsStack = 0
     --types of bags
-    destinationBag = paramDestinationBag
-    fromBag        = paramFromBag
+    local destinationBag = paramDestinationBag
+    local fromBag        = paramFromBag
     --get the number of slot in the destination
     bagIcon, bagSlots = GetBagInfo(destinationBag)
     -- last slot in destination => set out of range of the bag
-    lastSlotDest = bagSlots + 1
+    local lastSlotDest = bagSlots + 1
+
+    -- Vars
+    local idItem, itemStack, itemMaxStack, itemName, usedInCraftingType, itemType, extraInfo1, extraInfo2, extraInfo3, slotTmp
 
     --slot avalaible in dest
-    slotAvalaibleDest = {}
+    local slotAvalaibleDest = {}
     --Register all the item in the destination to stack the pile
-    itemsTables = {}
+    local itemsTables = {}
     --iteration to get all the slots
     for slotDest = 0, bagSlots-1 do
         itemStack, itemMaxStack = GetSlotStackSize(destinationBag, slotDest)
         itemName = GetItemName(destinationBag, slotDest)
         idItem   = GetItemInstanceId(destinationBag, slotDest)
-        --if the slot is not empty
-        if(itemStack > 0 and itemName ~= nil and idItem ~= nil) and itemStack < itemMaxStack then
+
+        --if the slot is not empty and there is still place
+        if idItem ~= nil and itemStack < itemMaxStack then
             itemsTables[idItem]           = {}
             itemsTables[idItem].stack     = itemStack
             itemsTables[idItem].maxStack  = itemMaxStack
             itemsTables[idItem].slot      = slotDest
-        else
+        elseif idItem == nil then
             table.insert(slotAvalaibleDest,slotDest)
         end
     end
@@ -244,7 +239,7 @@ function bankOpeningMM(eventCode, addOnName, isManual)
 end
 
 local function changeLangageMM(val)
-    lang = MulesManagement.Saved["langage"]
+    local lang = MulesManagement.Saved["langage"]
     MulesManagement.Saved["langage"] = val
     for keyTrad,tradValue in pairs(langage[lang]) do
         if MulesManagement.Saved["characterType"] == tradValue then
@@ -264,7 +259,7 @@ end
 
 
 local function getCharacterTypeList()
-    characterTypeList = {}
+    local characterTypeList = {}
     for k,v in ipairs(characterType) do
         table.insert(characterTypeList, getTranslated(v))
     end
@@ -274,6 +269,7 @@ end
 
 local function optionsMM()
     local textCheckBox = ""
+    local craftName, textCheckBox, othersKey
     local LAM = LibStub("LibAddonMenu-1.0")
     local optionsPanelMM = LAM:CreateControlPanel("Mules Management", "Mules Management")
     LAM:AddHeader(optionsPanelMM, "versionMM", "|c3366FF" .. getTranslated("version").."|r:" .. currentVersion)
@@ -302,7 +298,7 @@ local function optionsMM()
     --CRAFT MODE
     LAM:AddHeader(optionsPanelMM, "craftHeaderMM",  "|c3366FF" .. getTranslated("craftHeader").."|r")
 	for key,craftKey in pairs(craftingElementsMM) do
-        craftName = getTranslated(craftKey) .. ""
+        local craftName = getTranslated(craftKey) .. ""
         if MulesManagement.Saved["characterType"] == getTranslated("MM_CHARACTER_TYPE_MAIN") then
             textCheckBox = craftName .. " - " .. getTranslated("checkBoxTooltipMain")
         elseif MulesManagement.Saved["characterType"] == getTranslated("MM_CHARACTER_TYPE_MULE") then
