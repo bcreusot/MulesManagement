@@ -7,6 +7,6 @@
 Libs/LibStub/LibStub.lua
 Libs/LibAddonMenu-1.0/LibAddonMenu-1.0.lua
 
-
+ItemsTranslation.lua
 Langage.lua
 MulesManagement.lua
