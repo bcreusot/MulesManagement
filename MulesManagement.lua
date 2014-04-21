@@ -298,7 +298,7 @@ local function optionsMM()
     --CRAFT MODE
     LAM:AddHeader(optionsPanelMM, "craftHeaderMM",  "|c3366FF" .. getTranslated("craftHeader").."|r")
 	for key,craftKey in pairs(craftingElementsMM) do
-        local craftName = getTranslated(craftKey) .. ""
+        local craftName = getTranslated(craftKey)
         if MulesManagement.Saved["characterType"] == getTranslated("MM_CHARACTER_TYPE_MAIN") then
             textCheckBox = craftName .. " - " .. getTranslated("checkBoxTooltipMain")
         elseif MulesManagement.Saved["characterType"] == getTranslated("MM_CHARACTER_TYPE_MULE") then
@@ -313,11 +313,11 @@ local function optionsMM()
     --OTHERS MODE
     LAM:AddHeader(optionsPanelMM, "othersHeaderMM", "|c3366FF" .. getTranslated("othersHeader").."|r")
         for key,othersKey in pairs(othersElementsMM) do
-        othersName = getTranslated(othersKey) .. ""
+        othersName = getTranslated(othersKey)
         if MulesManagement.Saved["characterType"] == getTranslated("MM_CHARACTER_TYPE_MAIN") then
-            textCheckBox = othersKey .. " - " .. getTranslated("checkBoxTooltipMain")
+            textCheckBox = othersName .. " - " .. getTranslated("checkBoxTooltipMain")
         elseif MulesManagement.Saved["characterType"] == getTranslated("MM_CHARACTER_TYPE_MULE") then
-            textCheckBox = othersKey .. " - " .. getTranslated("checkBoxTooltipMule")
+            textCheckBox = othersName .. " - " .. getTranslated("checkBoxTooltipMule")
         end
         --The checkbox
         LAM:AddCheckbox(optionsPanelMM, othersKey .. othersName, othersName, textCheckBox,
