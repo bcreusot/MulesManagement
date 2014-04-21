@@ -313,14 +313,14 @@ local function optionsMM()
     --OTHERS MODE
     LAM:AddHeader(optionsPanelMM, "othersHeaderMM", "|c3366FF" .. getTranslated("othersHeader").."|r")
         for key,othersKey in pairs(othersElementsMM) do
-        othersKey = getTranslated(othersKey) .. ""
+        othersName = getTranslated(othersKey) .. ""
         if MulesManagement.Saved["characterType"] == getTranslated("MM_CHARACTER_TYPE_MAIN") then
             textCheckBox = othersKey .. " - " .. getTranslated("checkBoxTooltipMain")
         elseif MulesManagement.Saved["characterType"] == getTranslated("MM_CHARACTER_TYPE_MULE") then
             textCheckBox = othersKey .. " - " .. getTranslated("checkBoxTooltipMule")
         end
         --The checkbox
-        LAM:AddCheckbox(optionsPanelMM, othersKey .. othersKey, othersKey, textCheckBox,
+        LAM:AddCheckbox(optionsPanelMM, othersKey .. othersName, othersName, textCheckBox,
             function() return MulesManagement.Saved[othersKey] end,
             function(val) MulesManagement.Saved[othersKey] = val end)    
     end
