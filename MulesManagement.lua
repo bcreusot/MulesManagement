@@ -3,7 +3,7 @@
 	***** Mules Management *****
 	* Benjamin Creusot - Todo
 	* 17/04/2014 
-	* v1.0
+	* v2.02
 		Manage easily your mules. Automatically places items in your bank
     * MM = MulesManagement
 	-------------------
@@ -12,7 +12,7 @@
 
  -- Global Vars
 MMVars = "MulesManagementVars"
-currentVersion = "2.0"
+currentVersion = "2.02"
 
 othersElementsMM = {
     "ITEMTYPE_WEAPON",
@@ -106,7 +106,9 @@ end
 
 local function displayChat(itemName, quantity, moved)
     local startString,endString = string.find(itemName,"%^")
-    itemName = string.sub(itemName,0,startString-1)
+    if startString ~= nil then
+        itemName = string.sub(itemName,0,startString-1)
+    end
     if MulesManagement.Saved["spamChat"] then
         if moved then
             d(quantity .. " " .. itemName .. " " .. getTranslated("itemsMoved"))
@@ -126,7 +128,7 @@ local function moveItemsMM(paramFromBag, paramDestinationBag)
     bagIcon, bagSlots = GetBagInfo(destinationBag)
     -- last slot in destination => set out of range of the bag
     local lastSlotDest = bagSlots + 1
-
+    local isJunk = false
     -- Vars
     local idItem, itemStack, itemMaxStack, itemName, usedInCraftingType, itemType, extraInfo1, extraInfo2, extraInfo3, slotTmp
 
@@ -139,9 +141,9 @@ local function moveItemsMM(paramFromBag, paramDestinationBag)
         itemStack, itemMaxStack = GetSlotStackSize(destinationBag, slotDest)
         itemName = GetItemName(destinationBag, slotDest)
         idItem   = GetItemInstanceId(destinationBag, slotDest)
-
+        isJunk   = IsItemJunk(destinationBag, slotDest)
         --if the slot is not empty and there is still place
-        if idItem ~= nil and itemStack < itemMaxStack then
+        if (not isJunk) and idItem ~= nil and itemStack < itemMaxStack then
             itemsTables[idItem]           = {}
             itemsTables[idItem].stack     = itemStack
             itemsTables[idItem].maxStack  = itemMaxStack
@@ -158,14 +160,14 @@ local function moveItemsMM(paramFromBag, paramDestinationBag)
         itemStack, itemMaxStack = GetSlotStackSize(fromBag, slotFrom)
         itemName = GetItemName(fromBag, slotFrom)
         idItem   = GetItemInstanceId(fromBag, slotFrom)
-
+        isJunk   = IsItemJunk(fromBag, slotFrom)
         --if the slot is not empty
         if(itemStack > 0 and itemName ~= nil and idItem ~= nil) then
             --Get the crafting type
             usedInCraftingType, itemType, extraInfo1, extraInfo2, extraInfo3 = GetItemCraftingInfo(fromBag, slotFrom)
             itemType = GetItemType(fromBag, slotFrom)
             --Check if we work on that item or not
-            if itemsTables[idItem] or isMoveable(usedInCraftingType, itemType) then
+            if (not isJunk) and (itemsTables[idItem] or isMoveable(usedInCraftingType, itemType)) then
                 --if the item is already present on the dest and its not a full stack
                 if(itemsTables[idItem]) and itemStack ~= itemMaxStack then
                     destItem = itemsTables[idItem]
